@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
 
+import { useFeatureFlag } from '@/features/feature-flags'
+
 import type { Address, HouseholdData } from '../../api'
 import { formatUsPhone, useRequiredHouseholdData } from '../../api'
 
@@ -95,6 +97,7 @@ export function HouseholdSummary() {
   const data = useRequiredHouseholdData()
   const { primary, secondary } = getOverallStatus(data)
   const canUpdateAddress = data.allowedActions?.canUpdateAddress ?? true
+  const showContactPreferences = useFeatureFlag('show_contact_preferences')
 
   return (
     <div className="usa-card__container margin-bottom-4">
@@ -149,7 +152,7 @@ export function HouseholdSummary() {
           </dd>
 
           {/* Your preferred contact */}
-          {(data.email || data.phone) && (
+          {showContactPreferences && (data.email || data.phone) && (
             <>
               <dt className="text-bold">{t('profileTableHeadingContact')}</dt>
               <dd className="margin-left-0 margin-bottom-2">
